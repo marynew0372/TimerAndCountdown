@@ -2,14 +2,13 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Typography, Button, Box } from '@mui/material';
 import { BoxTypographyStyled, MainBoxStyled, TypographyStyled } from '../styles/styles';
 import { grey } from '@mui/material/colors';
-import React from 'react';
 
-const Timer = React.memo(function Timer() {
+const Timer = () => {
     const formatNumber = (num: number, length: number = 2) => String(num).padStart(length, '0');
 
+    const [onDisabled, setOnDisabled] = useState<boolean>(false);
     const [time, setTime] = useState(0);
     const [active, setActive] = useState(false);
-    const [onDisabled, setOnDisabled] = useState<boolean>(false);
 
     const startRef = useRef<number | null>(null);
     const savedTimeRef = useRef(0);
@@ -29,19 +28,19 @@ const Timer = React.memo(function Timer() {
                 savedTimeRef.current += Date.now() - startRef.current;
             }
             startRef.current = null;
+            setOnDisabled(false);
         };
     }, [active]);
 
-    const toggleStartPause = useCallback(() => {
+    const toggleStartPause = () => {
         setActive(prev => !prev);
-        !active && setOnDisabled(false);
-    }, []);
+    };
 
-    const handleReset = useCallback(() => {
-        setTime(0);
-        savedTimeRef.current = 0;
+    const handleReset = () => {
         setActive(false);
-    }, []);
+        savedTimeRef.current = 0;
+        setTime(0);
+    };
 
     const minutes = Math.floor(time / 60000);
     const seconds = Math.floor((time % 60000) / 1000);
@@ -70,6 +69,6 @@ const Timer = React.memo(function Timer() {
             </Box>
         </MainBoxStyled>
     );
-});
+};
 
 export default Timer;

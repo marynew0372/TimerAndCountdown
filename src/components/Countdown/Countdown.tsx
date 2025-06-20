@@ -8,7 +8,7 @@ import { grey } from '@mui/material/colors';
 import InputCount from './InputCountdown';
 import alarmSound from '../../assets/alarm/alarm.mp3';
 
-const Countdown = React.memo(function Countdown() {
+const Countdown = () => {
     const [onDisabled, setOnDisabled] = useState<boolean>(false);
     const [deadline, setDeadline] = useState<number | null>(null);
     const [timeObj, setTimeObj] = useState<PickerValue>(null);
@@ -34,7 +34,7 @@ const Countdown = React.memo(function Countdown() {
         return () => clearInterval(interval);
     }, [active, deadline]);
 
-    const handleSetTime = (value: Dayjs | null) => {
+    const handleSetTime = useCallback((value: Dayjs | null) => {
         if (value) {
             setTimeObj(value);
             const minutes = (value as Dayjs).minute();
@@ -43,7 +43,7 @@ const Countdown = React.memo(function Countdown() {
             setMsTime(totalMs);
             setDeadline(null);
         }
-    };
+    }, []);
 
     const handleStartPause = () => {
         if (!active && msTime > 0) {
@@ -91,6 +91,6 @@ const Countdown = React.memo(function Countdown() {
             </Box>
         </MainBoxStyled>
     );
-});
+};
 
 export default Countdown;

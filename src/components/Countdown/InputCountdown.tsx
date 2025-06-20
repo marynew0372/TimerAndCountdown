@@ -14,12 +14,9 @@ interface InputCountProps {
 }
 
 const InputCount = React.memo(function InputCount({ onChange, timeObj, onDisabled }: InputCountProps) {
-    const handleSetTime = useCallback(
-        (value: PickerValue) => {
-            onChange(value);
-        },
-        [onChange]
-    );
+    const handleSetTime = (value: PickerValue) => {
+        onChange(value);
+    };
 
     return (
         <BoxTypographyStyled>
