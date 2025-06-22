@@ -7,12 +7,14 @@ import { PickerValue } from '@mui/x-date-pickers/internals/models/value';
 import { grey } from '@mui/material/colors';
 import InputCount from './InputCountdown';
 import alarmSound from '../../assets/alarm/alarm.mp3';
+import LinearWithValueLabel from './Progress';
 
 const Countdown = () => {
     const [onDisabled, setOnDisabled] = useState<boolean>(false);
     const [deadline, setDeadline] = useState<number | null>(null);
     const [timeObj, setTimeObj] = useState<PickerValue>(null);
     const [msTime, setMsTime] = useState<number>(0);
+    const [initialMsTime, setInitialMsTime] = useState<number>(0);
     const [active, setActive] = useState<boolean>(false);
 
     useEffect(() => {
@@ -41,6 +43,7 @@ const Countdown = () => {
             const seconds = (value as Dayjs).second();
             const totalMs = minutes * 60000 + seconds * 1000;
             setMsTime(totalMs);
+            setInitialMsTime(totalMs);
             setDeadline(null);
         }
     }, []);
@@ -62,11 +65,14 @@ const Countdown = () => {
         setTimeObj(null);
         setActive(false);
         setOnDisabled(false);
+        setInitialMsTime(0);
     };
 
     const display = msTime > 0 ? dayjs().startOf('day').add(msTime, 'ms') : dayjs().startOf('day');
 
     const formatNumber = (num: number, length: number = 2) => String(num).padStart(length, '0');
+
+    const progress = initialMsTime ? 100 * (1 - msTime / initialMsTime) : 0;
 
     return (
         <MainBoxStyled>
@@ -75,6 +81,7 @@ const Countdown = () => {
                 <TypographyStyled>{formatNumber(display.minute())}</TypographyStyled>
                 <TypographyStyled>{formatNumber(display.second())}</TypographyStyled>
             </BoxTypographyStyled>
+            <LinearWithValueLabel initialMsTime={progress} onActive={active} />
             <InputCount onChange={handleSetTime} timeObj={timeObj} onDisabled={onDisabled} />
             <Box>
                 <Button sx={{ backgroundColor: grey[900] }} variant='contained' onClick={handleStartPause}>
